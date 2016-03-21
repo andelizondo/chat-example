@@ -6,5 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="jquery" level="application" />
     <orderEntry type="library" name="bootstrap" level="application" />
+    <orderEntry type="library" name="underscore" level="application" />
+    <orderEntry type="library" name="backbone" level="application" />
   </component>
 </module>
