@@ -2,22 +2,97 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Project 01</title>
+
+    <!--3rd Party CSSs-->
+    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
     <!--3rd Party Fonts & Icons-->
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-    <!--3rd Party CSSs-->
-    <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-
     <!--Custom CSSs-->
-    <link rel="stylesheet" type="text/css" href="css/chatstyle.css">
+    <link rel="stylesheet" type="text/css" href="css/chat.css">
 
 </head>
 <body>
     <div class="container">
         <div class="row chat-wrap">
+
+            <!-- Overlay Menu / Contacts -->
+            <div class="col-sm-3 contact-wrap collapse" id="Contacts">
+                <!--Header-->
+                <div class="row">
+                    <div class="chat-header col-sm-12">
+                        <h4>Selected a Contact</h4>
+                        <a class="btn btn header-button" href="#Contacts" data-toggle="collapse">
+                            <i class="fa fa-close"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!--Contacts-->
+                <div class="row content">
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                    <div class="contact btn">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
             <!--Left Menu / Conversation List-->
             <div class="col-sm-3 conversation-wrap">
@@ -25,8 +100,8 @@
                 <div class="row">
                     <div class="chat-header col-sm-12">
                         <h4>Andres Elizondo</h4>
-                        <a class="btn btn header-button">
-                            <i class="fa fa-pencil-square-o"></i> New
+                        <a class="btn btn header-button" href="#Contacts" data-toggle="collapse">
+                            <i class="fa fa-pencil-square-o fa-lg"></i>
                         </a>
                     </div>
                 </div>
@@ -108,8 +183,8 @@
                 <div class="row">
                     <div class="chat-header col-sm-12">
                         <h4>Luis Perez</h4>
-                        <a class="btn btn header-button">
-                            <i class="fa fa-info-circle"></i> Info
+                        <a class="btn btn header-button" href="#Members" data-toggle="collapse" >
+                            <i class="fa fa-info-circle fa-lg"></i>
                         </a>
                     </div>
                 </div>
@@ -117,21 +192,15 @@
                 <!--Messages-->
                 <div class="row content">
                     <div class="msg">
-                        <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
-                        <h5 class="media-heading">Naimish Sakhpara</h5>
-                        <small class="col-lg-10">Location H-2, Ayojan Nagar, Near Gate-3, Near
-                            Shreyas Crossing Dharnidhar Derasar,
-                            Paldi, Ahmedabad 380007, Ahmedabad,
-                            India
-                            Phone 091 37 669307
-                            Email aapamdavad.district@gmail.com</small>
-                    </div>
-                    <div class="msg">
                         <div class="media-body">
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
-
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Location H-2, Ayojan Nagar, Near Gate-3, Near
+                                Shreyas Crossing Dharnidhar Derasar,
+                                Paldi, Ahmedabad 380007, Ahmedabad,
+                                India
+                                Phone 091 37 669307
+                                Email aapamdavad.district@gmail.com</small>
                         </div>
                     </div>
                     <div class="msg">
@@ -139,7 +208,7 @@
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
 
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
                         </div>
                     </div>
                     <div class="msg">
@@ -147,7 +216,7 @@
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
 
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
                         </div>
                     </div>
                     <div class="msg">
@@ -155,7 +224,7 @@
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
 
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
                         </div>
                     </div>
                     <div class="msg">
@@ -163,7 +232,7 @@
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
 
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
                         </div>
                     </div>
                     <div class="msg">
@@ -171,7 +240,15 @@
                             <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
 
                             <h5 class="media-heading">Naimish Sakhpara</h5>
-                            <small class="col-lg-10">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
+                        </div>
+                    </div>
+                    <div class="msg">
+                        <div class="media-body">
+                            <small class="pull-right time"><i class="fa fa-clock-o"></i> 12:10am</small>
+
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="col-sm-11">Arnab Goswami: "Some people close to Congress Party and close to the government had a #secret #meeting in a farmhouse in Maharashtra in which Anna Hazare send some representatives and they had a meeting in the discussed how to go about this all fast and how eventually this will end."</small>
                         </div>
                     </div>
                 </div>
@@ -191,6 +268,47 @@
                 </div>
             </div>
 
+            <!--Sliding Menu / Conversation Members-->
+            <div class="col-sm-3 contact-wrap collapse" id="Members">
+                <!--Header-->
+                <div class="row">
+                    <div class="chat-header col-sm-12">
+                        <h4>Conversation Info</h4>
+                        <a class="btn btn header-button" href="#Members" data-toggle="collapse" >
+                            <i class="fa fa-close"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!--Members-->
+                <div class="row content">
+                    <div class="contact">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="pull-left time"><i>Owner</i></small>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="pull-left time"><i>Invited</i></small>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="pull-left time"><i>Owner</i></small>
+                        </div>
+                    </div>
+                    <div class="contact">
+                        <div class="media-body">
+                            <h5 class="media-heading">Naimish Sakhpara</h5>
+                            <small class="pull-left time"><i>Invited</i></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -200,6 +318,8 @@
     <script src="http://underscorejs.org/underscore.js"></script>
     <script src="http://backbonejs.org/backbone.js"></script>
 
+    <!--Custom CSSs-->
+    <script src="js/chat.js"></script>
 
 </body>
 </html>
