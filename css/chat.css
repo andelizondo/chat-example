@@ -79,6 +79,7 @@ body {
 /* Message List Wrapper */
 .message-wrap
 {
+    transition: any 0.5s ease;
     height: 440px;
 }
 /* Message Item */
@@ -122,17 +123,35 @@ body {
     width: 21px;
     display: table-cell;
     vertical-align: middle;
-}
 
+    transition: color 0.5s ease;
+}
 /* Remove Resize Bar */
 .no-resize-bar
 {
     resize: none;
 }
 /* Send Button */
-.btn-panel .btn:hover {
+.btn-wrap .btn:hover {
     color: #0451b7;
-    transition: color 0.5s ease;
+}
+
+
+/********* CONTACTS *********/
+/* Contact List Wrapper */
+.contact-wrap {
+    height: 500px;
+}
+/* Conversation Item */
+.contact {
+    padding: 15px 10px 7px;
+    border-bottom: 1px solid #ddd;
+}
+.contact.btn {
+    padding: 21px 10px 12px;
+}
+.contact.btn:hover {
+    background-color: whitesmoke;
 }
 
 
