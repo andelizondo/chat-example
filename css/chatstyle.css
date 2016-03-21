@@ -1,3 +1,4 @@
+/*********** BODY **************/
 /* Change Body Attributes */
 body {
     font-family: 'Open Sans', serif;
@@ -12,6 +13,8 @@ body {
     background-color: white;
 }
 
+
+/**************** HEADER ****************/
 /* Header used in every wrapper */
 .chat-header {
     height: 60px;
@@ -26,79 +29,80 @@ body {
 .chat-header h4 {
     display: table-cell;
     vertical-align: middle;
-    padding-left: 10px;
+    /*padding-left: 10px;*/
 }
 /*Header Button*/
-.chat-header a {
+.header-button {
     display: table-cell;
     vertical-align: middle;
-    padding-right: 10px;
-    text-align: right;
+    padding: 0;
     width: 21px;
     color: #333;
 }
 /* Header Button Hover */
 .chat-header .btn:hover {
+    transition: color 0.5s ease;
     color: black;
 }
-/* Content class used for every wrapper (except message-wrap) */
+
+
+/****************** CONTENT ******************/
+/* Content class used for every wrapper */
 .content {
     max-height: calc(100% - 60px);
     overflow: auto;
 }
 
+
+/********* CONVERSATIONS *********/
 /* Conversation List Wrapper */
 .conversation-wrap {
     height: 500px;
 }
 /* Conversation Item */
 .conversation {
-    padding: 5px;
-    margin: 5px 5px;
+    padding: 8px 10px 5px;
     border-bottom: 1px solid #ddd;
+
+    text-align: inherit;
+    display: inherit;
+    color: inherit;
+
+    transition: background-color 0.5s ease;
+}
+.conversation:hover {
+     background-color: whitesmoke;
 }
 
+
+/************ MESSAGES *************/
 /* Message List Wrapper */
 .message-wrap
 {
-    height: 500px;
-}
-/* Message Wrapper */
-.msg-wrap
-{
-    padding:10px;
-    overflow: auto;
-}
-.msg-wrap .media-heading
-{
-    color:#003bb3;
-    font-weight: 700;
-}
-
-.msg-date
-{
-    background: none;
-    text-align: center;
-    color:#aaa;
-    border:none;
-    box-shadow: none;
-    border-bottom: 1px solid #ddd;
+    height: 440px;
 }
 /* Message Item */
 .msg
 {
-    padding:5px;
-    border-bottom:1px solid #ddd;
-    margin:0;
+    padding: 8px 10px 5px;
+    border-bottom: 1px solid #ddd;
+}
+/* Message Sender */
+.message-wrap .media-heading
+{
+    color: #2285b3;
+    font-weight: 700;
+}
+/* Message Time */
+.time
+{
+    color:#bfbfbf;
 }
 
-/* Content class used for message-wrap */
-.msg-content {
-    max-height: calc(100% - 120px);
-    overflow: auto;
-}
-/* Send Message Footer */
-.msg-footer {
+
+/*************** MESSAGE BOX **********************/
+/* Send Message Box */
+.msg-box {
     width: 100%;
     height: 60px;
     box-shadow: 0 1px 2px;
@@ -108,70 +112,48 @@ body {
 /* Send Message Wrapper */
 .send-wrap
 {
-    border-top: 1px solid #eee;
-    border-bottom: 1px solid #eee;
     padding: 2px;
-    /*background: #f8f8f8;*/
-
     display: table-cell;
     vertical-align: middle;
 }
-/* Send Message */
-.send-message
+/* Button Wrapper */
+.btn-wrap
+{
+    width: 21px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+/* Remove Resize Bar */
+.no-resize-bar
 {
     resize: none;
 }
-/* Button Wrapper */
-.btn-panel
-{
-    padding: 2px;
-
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-    width: 21px;
-
-}
+/* Send Button */
 .btn-panel .btn:hover {
-    color: #0a61b7;
-    text-decoration: none;
+    color: #0451b7;
+    transition: color 0.5s ease;
 }
 
 
-.time
-{
-    color:#bfbfbf;
-}
-
-
-
-
-
-
+/*************** OTHER ********************/
 /* Remove Bootstrap Button Effect */
 .btn.active, .btn:active {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
 
-/* Scrollbar attributes */
+/* Scrollbar Attributes */
 body::-webkit-scrollbar {
     width: 12px;
 }
 ::-webkit-scrollbar {
     width: 6px;
 }
-
-/* Track */
 ::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 }
-
-/* Handle */
 ::-webkit-scrollbar-thumb {
     background:#ddd;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-}
-::-webkit-scrollbar-thumb:window-inactive {
-    background: #ddd;
 }
