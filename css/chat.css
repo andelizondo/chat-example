@@ -1,87 +1,119 @@
 /*********** BODY **************/
 /* Change Body Attributes */
-body {
+html, body {
     font-family: 'Open Sans', serif;
     background-color: blanchedalmond;
+    height: 100%;
+}
+.fill {
+    height: 100%;
+    padding-top: 5%;
+    padding-bottom: 5%;
 }
 
+
+/******************** MAIN WRAPPERS *******************/
 /* Main Window - Boxed style */
 .chat-wrap {
-    margin-top: 50px;
-    height: 500px;
+    height: 100%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+/* Panel Wrapper: Side Menu - Content Window */
+.panel-wrap {
+    height: 100%;
+    padding: 0;
     background-color: white;
+    overflow: hidden;
+}
+/* Section Wrapper: Conversations - Contacts - Messages - Details */
+.section-wrap {
+    height: 100%;
+}
+/* Header Wrapper */
+.header-wrap {
+    height: 10%;
+}
+/* Content Wrapper */
+.content-wrap {
+    height: 90%;
+    overflow: auto;
+    border-right: 1px solid #ddd;
+}
+/* Messages Wrapper */
+.content-wrap.messages {
+    height: 75%;
+}
+/* Message Text Wrapper */
+.send-wrap {
+    height: 15%;
 }
 
 
 /**************** HEADER ****************/
-/* Header used in every wrapper */
+/* Header Item */
 .chat-header {
-    height: 60px;
+    height: 100%;
     width: 100%;
 
     background: deepskyblue;
-    box-shadow: 0 1px 2px;
+    box-shadow: 0 1px 1px;
 
     display: table;
 }
-/*Header Title*/
+/* Header Title */
 .chat-header h4 {
     display: table-cell;
     vertical-align: middle;
-    /*padding-left: 10px;*/
+
+    width: 90%;
 }
-/*Header Button*/
+/* Header Button */
 .header-button {
     display: table-cell;
     vertical-align: middle;
-    padding: 0;
-    width: 21px;
     color: #333;
 }
-/* Header Button Hover */
+/* Header Properties */
+.header-button a {
+    padding: 0;
+}
 .chat-header .btn:hover {
     transition: color 0.5s ease;
-    color: black;
+    color: #333;
 }
 
 
-/****************** CONTENT ******************/
-/* Content class used for every wrapper */
-.content {
-    max-height: calc(100% - 60px);
-    overflow: auto;
-}
-
-
-/********* CONVERSATIONS *********/
-/* Conversation List Wrapper */
-.conversation-wrap {
-    height: 500px;
-}
+/************* CONVERSATIONS *************/
 /* Conversation Item */
 .conversation {
+    text-align: left;
     padding: 8px 10px 5px;
     border-bottom: 1px solid #ddd;
-
-    text-align: inherit;
-    display: inherit;
-    color: inherit;
+    width: 100%;
 
     transition: background-color 0.5s ease;
 }
+/* Conversation Properties */
 .conversation:hover {
      background-color: whitesmoke;
 }
 
+/******************* CONTACTS ***************/
+/* Contact Item */
+.contact {
+    padding: 21px 10px 12px;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    display: inline-block;
 
-/************ MESSAGES *************/
-/* Message List Wrapper */
-.message-wrap
-{
-    transition: any 0.5s ease;
-    height: 440px;
+    transition: background-color 0.5s ease;
 }
+/* Contact Properties */
+.contact.btn:hover {
+    background-color: whitesmoke;
+}
+
+/**************** MESSAGES *****************/
 /* Message Item */
 .msg
 {
@@ -89,7 +121,7 @@ body {
     border-bottom: 1px solid #ddd;
 }
 /* Message Sender */
-.message-wrap .media-heading
+.content-wrap.messages .media-heading
 {
     color: #2285b3;
     font-weight: 700;
@@ -101,58 +133,47 @@ body {
 }
 
 
-/*************** MESSAGE BOX **********************/
-/* Send Message Box */
-.msg-box {
+/*************** SEND MESSAGE **********************/
+/* Send Message Item */
+.send-message {
     width: 100%;
-    height: 60px;
-    box-shadow: 0 1px 2px;
+    height: 100%;
+
+    background-color: whitesmoke;
+    box-shadow: 0 -1px 1px;
 
     display: table;
 }
-/* Send Message Wrapper */
-.send-wrap
+/* Message Text */
+.message-text
 {
     padding: 2px;
     display: table-cell;
     vertical-align: middle;
 }
-/* Button Wrapper */
-.btn-wrap
+/* Send Button */
+.send-button
 {
-    width: 21px;
     display: table-cell;
     vertical-align: middle;
+    text-align: center;
 
-    transition: color 0.5s ease;
+    width: 10%;
 }
-/* Remove Resize Bar */
+/* Send Message Properties */
 .no-resize-bar
 {
     resize: none;
+    height: 100% !important;
 }
-/* Send Button */
-.btn-wrap .btn:hover {
+.send-button a {
+    padding: 0;
+}
+.send-message .btn:hover {
+    transition: color 0.5s ease;
     color: #0451b7;
 }
 
-
-/********* CONTACTS *********/
-/* Contact List Wrapper */
-.contact-wrap {
-    height: 500px;
-}
-/* Conversation Item */
-.contact {
-    padding: 15px 10px 7px;
-    border-bottom: 1px solid #ddd;
-}
-.contact.btn {
-    padding: 21px 10px 12px;
-}
-.contact.btn:hover {
-    background-color: whitesmoke;
-}
 
 
 /*************** OTHER ********************/
@@ -162,7 +183,22 @@ body {
     box-shadow: none;
 }
 
-/* Scrollbar Attributes */
+/* Fix Bootstrap Media Body Display */
+/* For Conversations and Contacts */
+.conversation .media-body, .contact .media-body {
+    display: block;
+    width: 100%;
+}
+
+/* Animate Side Information Menu */
+#MessagesCollapse {
+    -webkit-transition: width 0.15s ease, margin 0.15s ease;
+    -moz-transition: width 0.15s ease, margin 0.15s ease;
+    -o-transition: width 0.15s ease, margin 0.15s ease;
+    transition: width 0.15s ease, margin 0.15s ease;
+}
+
+/* ScrollBar Attributes */
 body::-webkit-scrollbar {
     width: 12px;
 }

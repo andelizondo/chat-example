@@ -1,27 +1,50 @@
-/* Jquery Selectors */
-var contacts = $("#Contacts");
-var conversationWrap = $(".conversation-wrap");
-var members = $("#Members");
-var messageWrap = $(".message-wrap");
 
-/* Toggle Contacts Visibility */
-contacts.on("show.bs.collapse", function(){
-    conversationWrap.hide();
-    contacts.css( "display", "block")
-});
-contacts.on("hide.bs.collapse", function(){
-    contacts.css( "display", "none");
-    conversationWrap.show();
+
+/************************* DOC READY *************************/
+$(document).ready(function () {
+    /* JQuery Selectors */
+    var messagesView = $('#MessagesView');
+
+    /* Toggle Members Info Panel Btn Event */
+    $('.info-btn').on('click', function () {
+        $("#MessagesCollapse").toggleClass('col-sm-12 col-sm-9');
+    });
+
+    /* Send Message Btn Event */
+    $('.message-send-button').on('click', function () {
+        var textContents = $('.message-text-contents');
+
+        /*var newMessage = new Message({
+            message: textContents.val()
+        });*/
+        textContents.val('');
+
+        //allMessages.add(newMessage, {at: 0});
+        // newMessage.save();
+
+        scrollMessages();
+    });
+
+    /* Set Messages View to Bottom */
+    var scrollMessages = function (){
+        messagesView.animate({scrollTop: messagesView.prop("scrollHeight")}, 1500);
+    }();
+
 });
 
-/* Toggle Members Visibility & Message Size */
-members.on("show.bs.collapse", function(){
-    messageWrap.addClass("col-sm-6");
-    messageWrap.removeClass("col-sm-9");
-    members.css( "display", "block");
-});
-members.on("hide.bs.collapse", function(){
-    members.css( "display", "none");
-    messageWrap.removeClass("col-sm-6");
-    messageWrap.addClass("col-sm-9");
-});
+
+
+/*var newConversation = new ConversationPost();
+ newConversation.save();*/
+/*    $('.contact-btn').on('click', function () {
+
+
+ var loggedUser = allUsers.find(function(model) { return model.get('name') === 'Lee'; });/!*
+ $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 1000);
+ allMessages.add(newMessage, {at: 0});
+ newMessage.save();*!/
+
+
+ /!*var newConversation = new ConversationPost();
+ newConversation.save();*!/
+ });*/
