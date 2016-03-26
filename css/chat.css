@@ -189,6 +189,10 @@ html, body {
     display: block;
     width: 100%;
 }
+.conversation .media-heading, .contact .media-heading {
+    color: #888;
+    font-weight: 700;
+}
 
 /* Animate Side Information Menu */
 #MessagesCollapse {
