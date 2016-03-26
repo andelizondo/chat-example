@@ -1,54 +1,61 @@
-/**************************** MODELS & COLLECTIONS ************************/
-
-/******************* User Model */
+/******************* User Model ****************/
 var User = Backbone.Model.extend({
     url: function () {
-        return 'http://assignment.bunq.com/user/';// + this.id;
+        return 'http://assignment.bunq.com/user/' + id;
     }
 });
-/* User Collection */
 var Users = Backbone.Collection.extend({
     model: User,
     url: "http://assignment.bunq.com/users"
 });
 
-/********************** Conversation Model */
+
+/********************** Conversation Model ****************/
 var Conversation = Backbone.Model.extend({
 });
-/* Conversation Collection */
 var Conversations = Backbone.Collection.extend({
     url: function () {
-        return 'http://assignment.bunq.com/conversation/user/' + this.userModel.toJSON().id;
+        return 'http://assignment.bunq.com/conversation/user/' + loggedUser.attributes.id;
     }
 });
-/* Conversation POST */
-/*var ConversationPost = Backbone.Model.extend({
-    url: 'http://assignment.bunq.com/conversation/group',
-    defaults: {
-        users: '2,3',
-        name: 'Work Chat'
-    }
-});*/
 
-/*********************** Message Model */
-/*var Message = Backbone.Model.extend({
-    url: 'http://assignment.bunq.com/conversation/10/message/send',
-    defaults: {
-        senderId: '2'
+
+/*********************** Message Model **************************/
+var Message = Backbone.Model.extend({
+    url: function () {
+        return 'http://assignment.bunq.com/conversation/' + selectedConversation.attributes.conversation.id + '/message/send';
     }
 });
-/!* Message Collection *!/
 var Messages = Backbone.Collection.extend({
-    url: 'http://assignment.bunq.com/conversation/10/message/limited?limit=30&offset=0'
-});*/
+    url: function () {
+        return 'http://assignment.bunq.com/conversation/' + selectedConversation.attributes.conversation.id + '/message/limited?limit=30&offset=0';
+    }
+});
 
 
-/******************************** VIEWS ***********************************/
+/********************** Participants Model ****************/
+var Participant = Backbone.Model.extend({
+});
+var Participants = Backbone.Collection.extend({
+    model: Participant
+});
 
-/******************* Contact View ************/
+
+/*************************************************** INSTANTIATE ******************************************************/
+
+var users = new Users();
+var conversations = new Conversations();
+var messages = new Messages();
+var participants = new Participants();
+
+var loggedUser = new User();
+var selectedConversation = new Conversation();
+
+
+/********************************************************* VIEWS ******************************************************/
+
+/******************* Contact View ***************************/
 var ContactView = Backbone.View.extend({
-    model: new User(),
-    tagName: 'div',
     className: 'contact btn',
 
     initialize: function (){
@@ -63,18 +70,23 @@ var ContactView = Backbone.View.extend({
         "click": "loadConversations"
     },
     loadConversations: function(){
-        new ConversationsView(this.model);
+        loggedUser = this.model;
+        conversations.fetch().done(function(){
+            // To update GUI after fetching the data;
+            $('#ConversationsView').animate({scrollTop: 0}, 400);
+        });
+
+        // To update GUI while fetching the data;
+        $('#loggedUser').html(loggedUser.attributes.name);
         $('#ContactsCollapse').collapse('toggle');
     }
 });
-/* Contacts View */
 var ContactsView = Backbone.View.extend({
-    model: new Users(),
+    model: users,
     el: '#ContactsView',
 
     initialize: function () {
         this.listenTo(this.model, 'sync', this.render);
-        this.model.fetch();
     },
     render: function (){
         var cache = document.createDocumentFragment();
@@ -87,9 +99,9 @@ var ContactsView = Backbone.View.extend({
     }
 });
 
-/********************** Conversation View ***********/
+
+/********************** Conversation View **************************/
 var ConversationView = Backbone.View.extend({
-    model: new Conversation(),
     tagName: 'div',
     className: 'conversation btn',
 
@@ -99,33 +111,53 @@ var ConversationView = Backbone.View.extend({
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
         return this;
+    },
+
+    events: {
+        "click": "loadMessages"
+    },
+    loadMessages: function(){
+        selectedConversation = this.model;
+        messages.fetch().done(function(){
+            // To update GUI after fetching the data;
+            $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 500);
+        });
+        new ParticipantsView();
+        
+        // To update GUI while fetching the data;
+        $('#selectedConversation').html(selectedConversation.attributes.conversation.name);
     }
 });
-/* Conversation Collection View */
 var ConversationsView = Backbone.View.extend({
+    model: conversations,
     el: '#ConversationsView',
-    model: new Conversations(),
 
-    initialize: function (userModel) {
-        this.model.userModel = userModel;
-
+    initialize: function () {
         this.listenTo(this.model, 'sync', this.render);
-        this.model.fetch();
     },
     render: function (){
-        var cache = document.createDocumentFragment();
-        this.model.each(function(_model){
-            cache.appendChild(new ConversationView({
-                model: _model
-            }).render().el);
+        this.$el.empty();
+        var container = document.createDocumentFragment();
+        _.each(this.model.models, function(subview) {
+            // Generate Conversation Name
+            var conversationAttributes = subview.attributes.conversation;
+            if (conversationAttributes.name == null){
+                var convUsers = $.grep(subview.attributes.users, function(e){ return e.userid != conversationAttributes.userid; });
+                var convUser = users.where({id: (convUsers.length > 0) ? convUsers[0].userid : '' });
+                conversationAttributes.name = (convUser.length > 0) ? convUser[0].attributes.name : 'Me!';
+            }
+
+            container.insertBefore(new ConversationView({
+                model: subview
+            }).render().el, container.firstChild);
         });
-        this.$el.html(cache);
+        this.$el.append(container);
     }
 });
 
 
 /*********************** Message View ********************/
-/*var MessageView = Backbone.View.extend({
+var MessageView = Backbone.View.extend({
     model: new Message(),
     tagName: 'div',
     className: 'msg',
@@ -138,62 +170,87 @@ var ConversationsView = Backbone.View.extend({
         return this;
     }
 });
-/!* Messages Collection View *!/
 var MessagesView = Backbone.View.extend({
-    model: new Messages,
+    model: messages,
     el: '#MessagesView',
 
     initialize: function () {
-        this.model.on('add', this.render, this);
-        this.model.fetch();
+        this.listenTo(this.model, 'sync', this.render);
     },
     render: function (){
-        var cache = document.createDocumentFragment();
-        this.model.each(function(_model){
-            cache.appendChild(new MessageView({
-                model: _model
+        this.$el.empty();
+        var container = document.createDocumentFragment();
+        _.each(this.model.models, function(subview) {
+            // Generate Sender Name
+            var msgUser = users.where({id: subview.attributes.senderId });
+            subview.attributes.senderName = (msgUser.length > 0) ? msgUser[0].attributes.name : 'Ghost';
+
+            container.insertBefore(new MessageView({
+                model: subview
+            }).render().el, container.firstChild);
+        });
+        this.$el.append(container);
+    }
+});
+
+
+/*********************** Participant View ********************/
+var ParticipantView = Backbone.View.extend({
+    model: new Participant(),
+    tagName: 'div',
+    className: 'contact',
+
+    initialize: function (){
+        this.template = _.template($('#ParticipantTemplate').html());
+    },
+    render: function (){
+        this.$el.html(this.template(this.model));
+        return this;
+    }
+});
+var ParticipantsView = Backbone.View.extend({
+    el: '#ParticipantsView',
+
+    initialize: function () {
+        this.render();
+    },
+    render: function (){
+        this.$el.empty();
+        var container = document.createDocumentFragment();
+        _.each(selectedConversation.attributes.users, function(subview) {
+            // Generate Participant Name
+            var participant = users.where({id: subview.userid });
+            subview.participantName = (participant.length > 0) ? participant[0].attributes.name : 'Ghost';
+            
+            container.appendChild(new ParticipantView({
+                model: subview
             }).render().el);
         });
-        this.$el.html(cache);
+        this.$el.append(container);
     }
-});*/
+});
 
 
-/*********************** Instantiate ****************/
-new ContactsView();
-// var contactsView = new ContactsView();
-//var messagesView = new MessagesView();
-//var conversationsView = new ConversationsView();
+/*************************************************** INSTANTIATE ******************************************************/
+var contactsView = new ContactsView();
+var conversationsView = new ConversationsView();
+var messagesView = new MessagesView();
+
+users.fetch();
 
 
+/* SEND MESSAGE */
+function sendMessage() {
+    var newMessage = new Message({
+        message: $('.message-text-contents').val(),
+        senderId: loggedUser.id,
+        timestamp: 'Just sent'
+    });
+    $('.message-text-contents').val('');
 
-
-
-
-
-
-
-
-
-/*
-
- //this.model.on('add', this.render, this);
-
- THIS IS FOR var ContactsView = Backbone.View.extend({
- initialize: function () {
- this.model.on('add', this.render, this);
- //this.listenTo(this.model, 'sync', this.render);
- this.model.fetch({
- success: function(response){
- _.each(response.toJSON(), function (item) {
- console.log('Successfully GOT item with id: ' + item.id);
- });
- },
- error: function (){
- _.each(response.toJSON(), function (item) {
- console.log('Failed to get Users');
- });
- }
- });
- },
-* */
+    messages.add(newMessage, {at: 0});
+    newMessage.save().done(function () {
+        // To update GUI after fetching the data;
+        $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 1500);
+    });
+}
