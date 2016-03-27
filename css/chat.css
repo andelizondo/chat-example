@@ -98,6 +98,7 @@ html, body {
      background-color: whitesmoke;
 }
 
+
 /******************* CONTACTS ***************/
 /* Contact Item */
 .contact {
@@ -112,6 +113,7 @@ html, body {
 .contact.btn:hover {
     background-color: whitesmoke;
 }
+
 
 /**************** MESSAGES *****************/
 /* Message Item */
@@ -175,7 +177,6 @@ html, body {
 }
 
 
-
 /*************** OTHER ********************/
 /* Remove Bootstrap Button Effect */
 .btn.active, .btn:active {
@@ -183,15 +184,15 @@ html, body {
     box-shadow: none;
 }
 
-/* Fix Bootstrap Media Body Display */
+/* Bootstrap Media Body Display */
 /* For Conversations and Contacts */
-.conversation .media-body, .contact .media-body {
-    display: block;
-    width: 100%;
-}
 .conversation .media-heading, .contact .media-heading {
     color: #888;
     font-weight: 700;
+}
+.conversation .media-body, .contact .media-body {
+    display: block;
+    width: 100%;
 }
 
 /* Animate Side Information Menu */
