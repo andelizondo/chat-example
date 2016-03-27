@@ -1,3 +1,5 @@
+/********************************************************* MODELS *****************************************************/
+
 /******************* User Model ****************/
 var User = Backbone.Model.extend({
     url: function () {
@@ -27,21 +29,20 @@ var Message = Backbone.Model.extend({
     }
 });
 var Messages = Backbone.Collection.extend({
+    model: Message,
     url: function () {
-        return 'http://assignment.bunq.com/conversation/' + selectedConversation.attributes.conversation.id + '/message/limited?limit=30&offset=0';
+        return 'http://assignment.bunq.com/conversation/' + ((selectedConversation.attributes.conversation != null) ?
+                selectedConversation.attributes.conversation.id : '0') + '/message/limited?limit=30&offset=0';
     }
 });
 
 
-/********************** Participants Model ****************/
-var Participant = Backbone.Model.extend({
-});
+/********************** Participants Collection ****************/
 var Participants = Backbone.Collection.extend({
-    model: Participant
 });
 
 
-/*************************************************** INSTANTIATE ******************************************************/
+/********************** INSTANTIATE **********************/
 
 var users = new Users();
 var conversations = new Conversations();
@@ -57,27 +58,29 @@ var selectedConversation = new Conversation();
 /******************* Contact View ***************************/
 var ContactView = Backbone.View.extend({
     className: 'contact btn',
+    template: _.template($('#ContactTemplate').html()),
 
-    initialize: function (){
-        this.template = _.template($('#ContactTemplate').html());
-    },
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
         return this;
     },
 
+    // Click Event
     events: {
         "click": "loadConversations"
     },
     loadConversations: function(){
-        loggedUser = this.model;
-        conversations.fetch().done(function(){
-            // To update GUI after fetching the data;
-            $('#ConversationsView').animate({scrollTop: 0}, 400);
-        });
+        // Set Logged User
+        loggedUser.set(this.model.attributes);
 
-        // To update GUI while fetching the data;
-        $('#loggedUser').html(loggedUser.attributes.name);
+        // Load User Conversations
+        conversations.fetch();
+
+        // Reset Selected Conversation View & Messages View
+        selectedConversation.clear();
+        messages.reset();
+
+        // Close Contact View
         $('#ContactsCollapse').collapse('toggle');
     }
 });
@@ -98,16 +101,27 @@ var ContactsView = Backbone.View.extend({
         this.$el.html(cache);
     }
 });
+var LoggedUserView = Backbone.View.extend({
+    model: loggedUser,
+    el: '#LoggedUserView',
+    template: _.template($('#LoggedUserTemplate').html()),
+
+    initialize: function (){
+        this.listenTo(this.model, 'change', this.render);
+        this.render();
+    },
+    render: function (){
+        this.$el.html(this.template(this.model.toJSON()));
+    }
+});
 
 
 /********************** Conversation View **************************/
 var ConversationView = Backbone.View.extend({
     tagName: 'div',
     className: 'conversation btn',
+    template: _.template($('#ConversationTemplate').html()),
 
-    initialize: function (){
-        this.template = _.template($('#ConversationTemplate').html());
-    },
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
         return this;
@@ -117,15 +131,15 @@ var ConversationView = Backbone.View.extend({
         "click": "loadMessages"
     },
     loadMessages: function(){
-        selectedConversation = this.model;
-        messages.fetch().done(function(){
-            // To update GUI after fetching the data;
-            $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 500);
-        });
-        new ParticipantsView();
-        
-        // To update GUI while fetching the data;
-        $('#selectedConversation').html(selectedConversation.attributes.conversation.name);
+        // Set Selected Conversation
+        selectedConversation.set(this.model.attributes);
+
+        // Fetch Messages
+        messages.fetch();
+
+        // Render Participants View
+        participants.set(this.model.attributes.users);
+        participants.trigger("change");
     }
 });
 var ConversationsView = Backbone.View.extend({
@@ -139,12 +153,13 @@ var ConversationsView = Backbone.View.extend({
         this.$el.empty();
         var container = document.createDocumentFragment();
         _.each(this.model.models, function(subview) {
+
             // Generate Conversation Name
             var conversationAttributes = subview.attributes.conversation;
             if (conversationAttributes.name == null){
-                var convUsers = $.grep(subview.attributes.users, function(e){ return e.userid != conversationAttributes.userid; });
-                var convUser = users.where({id: (convUsers.length > 0) ? convUsers[0].userid : '' });
-                conversationAttributes.name = (convUser.length > 0) ? convUser[0].attributes.name : 'Me!';
+                var conversationUsers = $.grep(subview.attributes.users, function(e){ return e.userid != conversationAttributes.userid; });
+                var conversationUser = users.where({id: (conversationUsers.length > 0) ? conversationUsers[0].userid : '' });
+                conversationAttributes.name = (conversationUser.length > 0) ? conversationUser[0].attributes.name : 'Me!';
             }
 
             container.insertBefore(new ConversationView({
@@ -152,19 +167,31 @@ var ConversationsView = Backbone.View.extend({
             }).render().el, container.firstChild);
         });
         this.$el.append(container);
+
+        // To update GUI after fetching the data;
+        $('#ConversationsView').animate({scrollTop: 0}, 400);
+    }
+});
+var SelectedConversationView = Backbone.View.extend({
+    model: selectedConversation,
+    el: '#SelectedConversationView',
+    template: _.template($('#SelectedConversationTemplate').html()),
+
+    initialize: function (){
+        this.listenTo(this.model, 'change', this.render);
+        this.render();
+    },
+    render: function (){
+        this.$el.html(this.template(this.model.toJSON()));
     }
 });
 
 
 /*********************** Message View ********************/
 var MessageView = Backbone.View.extend({
-    model: new Message(),
-    tagName: 'div',
     className: 'msg',
+    template: _.template($('#MessageTemplate').html()),
 
-    initialize: function (){
-        this.template = _.template($('#MessageTemplate').html());
-    },
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
         return this;
@@ -176,6 +203,11 @@ var MessagesView = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, 'sync', this.render);
+        this.listenTo(this.model, 'reset', this.render);
+
+        this.timer = setInterval(function() {
+            messages.fetch();
+        }, 5000);
     },
     render: function (){
         this.$el.empty();
@@ -190,37 +222,41 @@ var MessagesView = Backbone.View.extend({
             }).render().el, container.firstChild);
         });
         this.$el.append(container);
+
+        // To update GUI after fetching the data;
+        $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 500);
+    },
+    close: function() {
+        clearInterval(this.timer);
     }
 });
 
 
 /*********************** Participant View ********************/
 var ParticipantView = Backbone.View.extend({
-    model: new Participant(),
-    tagName: 'div',
     className: 'contact',
+    template: _.template($('#ParticipantTemplate').html()),
 
-    initialize: function (){
-        this.template = _.template($('#ParticipantTemplate').html());
-    },
     render: function (){
-        this.$el.html(this.template(this.model));
+        this.$el.html(this.template(this.model.toJSON()));
         return this;
     }
 });
 var ParticipantsView = Backbone.View.extend({
+    model: participants,
     el: '#ParticipantsView',
 
     initialize: function () {
+        this.listenTo(this.model, 'change', this.render);
         this.render();
     },
     render: function (){
         this.$el.empty();
         var container = document.createDocumentFragment();
-        _.each(selectedConversation.attributes.users, function(subview) {
+        _.each(this.model.models, function(subview) {
             // Generate Participant Name
-            var participant = users.where({id: subview.userid });
-            subview.participantName = (participant.length > 0) ? participant[0].attributes.name : 'Ghost';
+            var participant = users.where({id: subview.attributes.userid });
+            subview.attributes.participantName = (participant.length > 0) ? participant[0].attributes.name : 'Ghost';
             
             container.appendChild(new ParticipantView({
                 model: subview
@@ -232,25 +268,24 @@ var ParticipantsView = Backbone.View.extend({
 
 
 /*************************************************** INSTANTIATE ******************************************************/
-var contactsView = new ContactsView();
-var conversationsView = new ConversationsView();
-var messagesView = new MessagesView();
+new ContactsView();
+new LoggedUserView();
+new ConversationsView();
+new SelectedConversationView();
+new MessagesView();
+new ParticipantsView();
 
+// Initialize by providing all available users (Mocking up the Login Page)
 users.fetch();
 
-
+/*********************************************** FUNCTIONS ************************************************************/
 /* SEND MESSAGE */
 function sendMessage() {
-    var newMessage = new Message({
+    messages.create({
         message: $('.message-text-contents').val(),
         senderId: loggedUser.id,
         timestamp: 'Just sent'
-    });
-    $('.message-text-contents').val('');
+    }, {at: 0, wait: true});
 
-    messages.add(newMessage, {at: 0});
-    newMessage.save().done(function () {
-        // To update GUI after fetching the data;
-        $('#MessagesView').animate({scrollTop: $('#MessagesView').prop("scrollHeight")}, 1500);
-    });
+    $('.message-text-contents').val('');
 }

@@ -18,6 +18,7 @@
 
 </head>
 <body>
+    <!-- Main Container -->
     <div class="container fill">
         <div class="row chat-wrap">
 
@@ -50,13 +51,7 @@
 
                     <!--Header-->
                     <div class="row header-wrap">
-                        <div class="chat-header col-sm-12">
-                            <h4 id="loggedUser"></h4>
-                            <div class="header-button">
-                                <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse">
-                                    <i class="fa fa-pencil-square-o fa-lg"></i>
-                                </a>
-                            </div>
+                        <div class="chat-header col-sm-12" id="LoggedUserView">
                         </div>
                     </div>
 
@@ -76,13 +71,7 @@
 
                     <!--Header-->
                     <div class="row header-wrap">
-                        <div class="chat-header col-sm-12">
-                            <h4 id="selectedConversation"></h4>
-                            <div class="header-button">
-                                <a class="btn pull-right info-btn">
-                                    <i class="fa fa-info-circle fa-lg"></i>
-                                </a>
-                            </div>
+                        <div class="chat-header col-sm-12" id="SelectedConversationView">
                         </div>
                     </div>
 
@@ -112,7 +101,7 @@
                         <div class="chat-header col-sm-12">
                             <h4>Participants</h4>
                             <div class="header-button">
-                                <a class="btn pull-right info-btn">
+                                <a class="btn pull-right" onclick='toggleConversationInfo()'>
                                     <i class="fa fa-close"></i>
                                 </a>
                             </div>
@@ -126,8 +115,10 @@
                 </div>
 
             </div>
+
         </div>
     </div>
+
 
     <!-- Backbone Templates -->
     <script type="text/template" id="ContactTemplate">
@@ -135,10 +126,26 @@
             <h5 class="media-heading"><%= name %></h5>
         </div>
     </script>
+    <script type="text/template" id="LoggedUserTemplate">
+        <h4><%= name %></h4>
+        <div class="header-button">
+            <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse">
+                <i class="fa fa-pencil-square-o fa-lg"></i>
+            </a>
+        </div>
+    </script>
     <script type="text/template" id="ConversationTemplate">
         <div class="media-body">
             <h5 class="media-heading"><%= conversation.name %></h5>
             <small class="pull-right time"><%= (conversation.lastseen == null) ? 'Not seen recently' : 'Last seen: ' +  new Date(conversation.lastseen).toLocaleDateString() %></small>
+        </div>
+    </script>
+    <script type="text/template" id="SelectedConversationTemplate">
+        <h4><%= (typeof conversation === "undefined") ? '' : conversation.name %></h4>
+        <div class="header-button">
+            <a class="btn pull-right" onclick='toggleConversationInfo()'>
+                <i class="fa fa-info-circle fa-lg"></i>
+            </a>
         </div>
     </script>
     <script type="text/template" id="MessageTemplate">
@@ -155,6 +162,7 @@
             <small class="pull-right time"><%= (lastseen == null) ? 'Not seen recently' : 'Last seen: ' +  new Date(lastseen).toLocaleDateString() %></small>
         </div>
     </script>
+
 
     <!--3rd Party JSs -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.js"></script>
