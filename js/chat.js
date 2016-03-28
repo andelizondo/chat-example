@@ -6,9 +6,20 @@ $(document).ready(function () {
         sendMessage();
     });
     /* Trigger click when Enter */
-    $("#messageText").keyup(function(event){
+    $("#MessageText").keyup(function(event){
         if(event.keyCode == 13){
             sendMessage();
+        }
+    });
+
+    /* Create Conversation Btn Event */
+    $('.create-conversation-button').on('click', function () {
+        createConversation();
+    });
+    /* Trigger click when Enter */
+    $("#ConverstionName").keyup(function(event){
+        if(event.keyCode == 13){
+            createConversation();
         }
     });
 
@@ -19,4 +30,11 @@ $(document).ready(function () {
 /* Toggle Members Info Panel Btn Event */
 function toggleConversationInfo() {
     $("#MessagesCollapse").toggleClass('col-sm-12 col-sm-9');
+}
+
+// Reset Selected Conversation View & Messages View
+function clearMessages(){
+    selectedConversation.clear();
+    messages.reset();
+    participants.reset();
 }

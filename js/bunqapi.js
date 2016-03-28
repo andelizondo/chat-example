@@ -14,8 +14,12 @@ var Users = Backbone.Collection.extend({
 
 /********************** Conversation Model ****************/
 var Conversation = Backbone.Model.extend({
+    url: function () {
+        return 'http://assignment.bunq.com/conversation/group';
+    }
 });
 var Conversations = Backbone.Collection.extend({
+    model: Conversation,
     url: function () {
         return 'http://assignment.bunq.com/conversation/user/' + loggedUser.attributes.id;
     }
@@ -55,10 +59,10 @@ var selectedConversation = new Conversation();
 
 /********************************************************* VIEWS ******************************************************/
 
-/******************* Contact View ***************************/
-var ContactView = Backbone.View.extend({
+/******************* Login View ***************************/
+var LoginView = Backbone.View.extend({
     className: 'contact btn',
-    template: _.template($('#ContactTemplate').html()),
+    template: _.template($('#LoginTemplate').html()),
 
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
@@ -76,26 +80,25 @@ var ContactView = Backbone.View.extend({
         // Load User Conversations
         conversations.fetch();
 
-        // Reset Selected Conversation View & Messages View
-        selectedConversation.clear();
-        messages.reset();
+        // Load Available Contacts
+        contactsView = new ContactsView();
 
-        // Close Contact View
-        $('#ContactsCollapse').collapse('toggle');
+        // Close Login View
+        $('#LoginCollapse').collapse('toggle');
     }
 });
-var ContactsView = Backbone.View.extend({
+var LoginsView = Backbone.View.extend({
     model: users,
-    el: '#ContactsView',
+    el: '#LoginView',
 
     initialize: function () {
         this.listenTo(this.model, 'sync', this.render);
     },
     render: function (){
         var cache = document.createDocumentFragment();
-        this.model.each(function(_model){
-            cache.appendChild(new ContactView({
-                model: _model
+        _.each(this.model.models, function(subview) {
+            cache.appendChild(new LoginView({
+                model: subview
             }).render().el);
         });
         this.$el.html(cache);
@@ -112,6 +115,37 @@ var LoggedUserView = Backbone.View.extend({
     },
     render: function (){
         this.$el.html(this.template(this.model.toJSON()));
+    }
+});
+
+
+/******************* Contacts View ***************************/
+var ContactView = Backbone.View.extend({
+    className: 'contact',
+    template: _.template($('#ContactTemplate').html()),
+
+    render: function (){
+        this.$el.html(this.template(this.model.toJSON()));
+        return this;
+    }
+});
+var ContactsView = Backbone.View.extend({
+    model: users,
+    el: '#ContactsView',
+
+    initialize: function () {
+        this.render();
+    },
+    render: function (){
+        var cache = document.createDocumentFragment();
+        _.each(this.model.models, function(subview) {
+            if (subview.id != loggedUser.id) {
+                cache.appendChild(new ContactView({
+                    model: subview
+                }).render().el);
+            }
+        });
+        this.$el.html(cache);
     }
 });
 
@@ -148,6 +182,10 @@ var ConversationsView = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, 'sync', this.render);
+
+        this.timer = setInterval(function() {
+            conversations.fetch();
+        }, 15000);
     },
     render: function (){
         this.$el.empty();
@@ -156,7 +194,7 @@ var ConversationsView = Backbone.View.extend({
 
             // Generate Conversation Name
             var conversationAttributes = subview.attributes.conversation;
-            if (conversationAttributes.name == null){
+            if (conversationAttributes.name == null || conversationAttributes.name == ''){
                 var conversationUsers = $.grep(subview.attributes.users, function(e){ return e.userid != conversationAttributes.userid; });
                 var conversationUser = users.where({id: (conversationUsers.length > 0) ? conversationUsers[0].userid : '' });
                 conversationAttributes.name = (conversationUser.length > 0) ? conversationUser[0].attributes.name : 'Me!';
@@ -248,6 +286,7 @@ var ParticipantsView = Backbone.View.extend({
 
     initialize: function () {
         this.listenTo(this.model, 'change', this.render);
+        this.listenTo(this.model, 'reset', this.render);
         this.render();
     },
     render: function (){
@@ -268,24 +307,49 @@ var ParticipantsView = Backbone.View.extend({
 
 
 /*************************************************** INSTANTIATE ******************************************************/
-new ContactsView();
+new LoginsView();
 new LoggedUserView();
-new ConversationsView();
 new SelectedConversationView();
+new ConversationsView();
 new MessagesView();
 new ParticipantsView();
+var contactsView;
 
 // Initialize by providing all available users (Mocking up the Login Page)
 users.fetch();
 
 /*********************************************** FUNCTIONS ************************************************************/
+
 /* SEND MESSAGE */
 function sendMessage() {
-    messages.create({
-        message: $('.message-text-contents').val(),
+    var newMessage = {
+        message: $('#MessageText').val(),
         senderId: loggedUser.id,
         timestamp: 'Just sent'
-    }, {at: 0, wait: true});
+    };
+    messages.create(newMessage, {at: 0, wait: true});
 
-    $('.message-text-contents').val('');
+    // Clear form
+    $('#MessageText').val('');
+}
+
+/* CREATE CONVERSATION */
+function createConversation() {
+    var newConversation = new Conversation({
+        users: '',
+        name: $('#ConverstionName').val()
+    });
+    $.each(contactsView.$('input:checked'), function (i, checkbox) {
+        newConversation.attributes.users += checkbox.value + ',';
+    });
+    newConversation.attributes.users += loggedUser.attributes.id;
+
+    newConversation.save().done(function() {
+        conversations.fetch();
+    });
+
+    // Clear form
+    $('#ConverstionName').val('');
+    contactsView = new ContactsView();
+    $('#ContactsCollapse').collapse('toggle');
 }

@@ -40,8 +40,16 @@ html, body {
     border-right: 1px solid #ddd;
 }
 /* Messages Wrapper */
+.content-wrap.contacts {
+    height: 80%;
+}
+/* Messages Wrapper */
 .content-wrap.messages {
     height: 75%;
+}
+/* Message Text Wrapper */
+.conversation-wrap {
+    height: 10%;
 }
 /* Message Text Wrapper */
 .send-wrap {
