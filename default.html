@@ -25,15 +25,31 @@
             <!-- Contacts & Conversations -->
             <div class="col-sm-3 panel-wrap">
 
-                <!-- Overlay Menu / Contacts -->
-                <div class="col-sm-12 section-wrap collapse in" id="ContactsCollapse">
+                <!-- Login Menu -->
+                <div class="col-sm-12 section-wrap collapse in" id="LoginCollapse">
 
                     <!--Header-->
                     <div class="row header-wrap">
                         <div class="chat-header col-sm-12">
-                            <h4>Select a Contact</h4>
+                            <h4>Login</h4>
+                        </div>
+                    </div>
+
+                    <!--Users-->
+                    <div class="row content-wrap" id="LoginView">
+                    </div>
+
+                </div>
+
+                <!-- New Conversation Menu / Contacts -->
+                <div class="col-sm-12 section-wrap collapse" id="ContactsCollapse">
+
+                    <!--Header-->
+                    <div class="row header-wrap">
+                        <div class="chat-header col-sm-12">
+                            <h4>Create Conversation</h4>
                             <div class="header-button">
-                                <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse">
+                                <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse" onclick="clearMessages()">
                                     <i class="fa fa-close"></i>
                                 </a>
                             </div>
@@ -41,7 +57,19 @@
                     </div>
 
                     <!--Contacts-->
-                    <div class="row content-wrap" id="ContactsView">
+                    <div class="row content-wrap contacts" id="ContactsView">
+                    </div>
+
+                    <!--Message box & Send Button-->
+                    <div class="row conversation-wrap">
+                        <div class="send-message">
+                            <div class="message-text">
+                                <input  id="ConverstionName" class="form-control" type="text" placeholder="Name this conversation">
+                            </div>
+                            <div class="send-button">
+                                <a class="btn create-conversation-button"><i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -83,7 +111,7 @@
                     <div class="row send-wrap">
                         <div class="send-message">
                             <div class="message-text">
-                                <textarea id="messageText" class="no-resize-bar form-control message-text-contents" rows="2" placeholder="Write a message..."></textarea>
+                                <textarea id="MessageText" class="no-resize-bar form-control" rows="2" placeholder="Write a message..."></textarea>
                             </div>
                             <div class="send-button">
                                 <a class="btn message-send-button">Send <i class="fa fa-send"></i></a>
@@ -93,8 +121,8 @@
 
                 </div>
 
-                <!--Sliding Menu / Conversation Members-->
-                <div class="col-sm-3 section-wrap" id="Members">
+                <!--Sliding Menu / Conversation Participants-->
+                <div class="col-sm-3 section-wrap">
 
                     <!--Header-->
                     <div class="row header-wrap">
@@ -108,7 +136,7 @@
                         </div>
                     </div>
 
-                    <!--Members-->
+                    <!--Participants-->
                     <div class="row content-wrap" id="ParticipantsView">
                     </div>
 
@@ -121,15 +149,22 @@
 
 
     <!-- Backbone Templates -->
-    <script type="text/template" id="ContactTemplate">
+    <script type="text/template" id="LoginTemplate">
         <div class="media-body">
             <h5 class="media-heading"><%= name %></h5>
         </div>
     </script>
+    <script type="text/template" id="ContactTemplate">
+        <div class="media-body">
+            <div class="media-heading">
+                <input type="checkbox" value="<%= id %>"> <%= name %>
+            </div>
+        </div>
+    </script>
     <script type="text/template" id="LoggedUserTemplate">
-        <h4><%= name %></h4>
+        <h4 href="#LoginCollapse" data-toggle="collapse" onclick="clearMessages()"><%= name %></h4>
         <div class="header-button">
-            <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse">
+            <a class="btn pull-right" href="#ContactsCollapse" data-toggle="collapse" onclick="clearMessages()">
                 <i class="fa fa-pencil-square-o fa-lg"></i>
             </a>
         </div>
